@@ -36,7 +36,7 @@ import timber.log.Timber
 
 fun Name.resolve(context: Context) =
     when (this) {
-        is Name.Known -> raw
+        is Name.Known -> raw.repairMojibakeForDisplay()
         is Name.Unknown ->
             when (placeholder) {
                 Placeholder.ALBUM -> context.getString(R.string.def_album)
