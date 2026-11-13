@@ -405,7 +405,7 @@
     <string name="def_song_count">No songs</string>
     <string name="def_album_count">No albums</string>
     <string name="def_playback">No music playing</string>
-    <string name="widget_sleep_timer_idle">Tap to start · %1$d min</string>
+    <string name="widget_sleep_timer_idle">Tap to start</string>
     <string name="widget_sleep_timer_counting">Countdown active</string>
     <string name="widget_sleep_timer_pending">Stop after this song</string>
     <string name="widget_sleep_timer_requires_playback">Play music to start a timer</string>

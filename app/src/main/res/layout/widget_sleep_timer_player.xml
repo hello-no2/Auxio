@@ -34,8 +34,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="10sp"
-            tools:text="Tap to start · 15 min" />
+            android:text="@string/widget_sleep_timer_requires_playback"
+            android:textSize="10sp" />
 
         <Chronometer
             android:id="@+id/widget_timer"
@@ -46,6 +46,7 @@
             android:includeFontPadding="false"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="15:00"
             tools:text="15:00" />
 
         <TextView
@@ -55,8 +56,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="12sp"
-            tools:text="在没有尽头的海岸线尽头等一场不会迟到的雨" />
+            android:text="@string/def_playback"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/widget_artist"
@@ -65,8 +66,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="10sp"
-            tools:text="来自南方海风尽头的回声与独立夏日梦游者合唱团" />
+            android:text="@string/def_artist"
+            android:textSize="10sp" />
 
         <LinearLayout
             android:layout_width="match_parent"

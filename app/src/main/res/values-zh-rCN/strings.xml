@@ -356,7 +356,7 @@
     <string name="set_sleep_timer_minutes_unit">分钟</string>
     <string name="desc_sleep_timer_start">启动 %1$d 分钟睡眠定时器</string>
     <string name="desc_sleep_timer_cancel">取消睡眠定时器</string>
-    <string name="widget_sleep_timer_idle">点按开始 · %1$d 分钟</string>
+    <string name="widget_sleep_timer_idle">点按开始</string>
     <string name="widget_sleep_timer_counting">倒计时中</string>
     <string name="widget_sleep_timer_pending">本曲结束后停止</string>
     <string name="widget_sleep_timer_requires_playback">播放音乐后可启动定时</string>
