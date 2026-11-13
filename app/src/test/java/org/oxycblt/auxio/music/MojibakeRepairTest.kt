@@ -2,6 +2,7 @@ package org.oxycblt.auxio.music
 
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -13,6 +14,24 @@ class MojibakeRepairTest {
             String(expected.toByteArray(Charset.forName("GBK")), StandardCharsets.ISO_8859_1)
 
         assertEquals(expected, repairMojibakeForDisplay(corrupted))
+    }
+
+    @Test
+    fun repairsBig5BytesForTraditionalChineseLocale() {
+        val priorLocale = Locale.getDefault()
+        try {
+            Locale.setDefault(Locale.TAIWAN)
+            val expected = "海邊來信"
+            val corrupted =
+                String(
+                    expected.toByteArray(Charset.forName("Big5")),
+                    StandardCharsets.ISO_8859_1,
+                )
+
+            assertEquals(expected, repairMojibakeForDisplay(corrupted))
+        } finally {
+            Locale.setDefault(priorLocale)
+        }
     }
 
     @Test

@@ -22,6 +22,7 @@ import org.oxycblt.auxio.music.resolve
 import org.oxycblt.auxio.music.resolveNames
 import org.oxycblt.auxio.playback.SleepTimerState
 import org.oxycblt.auxio.playback.service.PlaybackActions
+import org.oxycblt.auxio.playback.service.SleepTimerController
 import org.oxycblt.auxio.util.newBroadcastPendingIntent
 import java.util.Locale
 
@@ -102,6 +103,33 @@ internal object SleepTimerWidgetRenderer {
         )
     }
 
+    /** Update idle widget timers even when the playback service is not running. */
+    fun updateDefaultDuration(context: Context, minutes: Int) {
+        if (SleepTimerController.hasPersistedTimer(context)) return
+        val manager = AppWidgetManager.getInstance(context)
+        widgetSpecs.forEach { spec ->
+            val component = ComponentName(context, spec.provider)
+            if (manager.getAppWidgetIds(component).isEmpty()) return@forEach
+
+            val views = RemoteViews(context.packageName, spec.layout)
+            views.setChronometer(
+                R.id.widget_timer,
+                SystemClock.elapsedRealtime(),
+                null,
+                false,
+            )
+            views.setTextViewText(
+                R.id.widget_timer,
+                String.format(Locale.getDefault(), "%02d:00", minutes),
+            )
+            views.setContentDescription(
+                R.id.widget_timer_toggle,
+                context.getString(R.string.desc_sleep_timer_start, minutes),
+            )
+            manager.partiallyUpdateAppWidget(component, views)
+        }
+    }
+
     fun updateAll(
         context: Context,
         playback: WidgetComponent.PlaybackState?,
@@ -156,6 +184,12 @@ internal object SleepTimerWidgetRenderer {
             context.newBroadcastPendingIntent(PlaybackActions.ACTION_SLEEP_TIMER_TOGGLE),
         )
 
+        val actionVisibility =
+            if (playback != null) android.view.View.VISIBLE else android.view.View.GONE
+        views.setViewVisibility(R.id.widget_skip_prev, actionVisibility)
+        views.setViewVisibility(R.id.widget_skip_next, actionVisibility)
+        views.setViewVisibility(R.id.widget_timer_toggle, actionVisibility)
+
         val isTimerActive = timerState !is SleepTimerState.Idle
         val timerDescription =
             if (isTimerActive) {
@@ -181,7 +215,7 @@ internal object SleepTimerWidgetRenderer {
                 views.setTextViewText(R.id.widget_timer, time)
                 val status =
                     if (playback?.isPlaying == true) {
-                        context.getString(R.string.widget_sleep_timer_idle, defaultMinutes)
+                        context.getString(R.string.widget_sleep_timer_idle)
                     } else {
                         context.getString(R.string.widget_sleep_timer_requires_playback)
                     }

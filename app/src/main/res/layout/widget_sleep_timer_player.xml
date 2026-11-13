@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/spacing_small">
+            android:paddingTop="4dp">
 
             <ImageButton
                 android:id="@+id/widget_skip_prev"

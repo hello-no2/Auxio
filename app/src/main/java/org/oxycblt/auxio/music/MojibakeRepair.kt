@@ -17,6 +17,11 @@ import java.nio.charset.CodingErrorAction
 import java.nio.charset.StandardCharsets
 import java.util.Locale
 
+private val UTF8_CHARSET = StandardCharsets.UTF_8
+private val GBK_CHARSET = Charset.forName("GBK")
+private val BIG5_CHARSET = runCatching { Charset.forName("Big5") }.getOrNull()
+private val WINDOWS_1252_CHARSET = Charset.forName("windows-1252")
+
 /**
  * Repairs high-confidence Latin-1/Windows-1252 mojibake for display. Source tags are never changed.
  * Valid CJK and ordinary Latin names are returned unchanged.
@@ -40,12 +45,14 @@ internal fun repairMojibakeForDisplay(value: String): String {
 }
 
 private fun preferredDecoders(): List<Charset> {
-    val utf8 = StandardCharsets.UTF_8
-    val gbk = Charset.forName("GBK")
-    val big5 = Charset.forName("Big5")
     val locale = Locale.getDefault()
     val traditionalChinese = locale.language == "zh" && locale.country in setOf("TW", "HK", "MO")
-    return if (traditionalChinese) listOf(utf8, big5, gbk) else listOf(utf8, gbk, big5)
+    return buildList {
+        add(UTF8_CHARSET)
+        if (traditionalChinese) BIG5_CHARSET?.let(::add)
+        add(GBK_CHARSET)
+        if (!traditionalChinese) BIG5_CHARSET?.let(::add)
+    }
 }
 
 private fun latin1Bytes(value: String): ByteArray? {
@@ -56,7 +63,7 @@ private fun latin1Bytes(value: String): ByteArray? {
 private fun windows1252Bytes(value: String): ByteArray? =
     try {
         val buffer =
-            Charset.forName("windows-1252")
+            WINDOWS_1252_CHARSET
                 .newEncoder()
                 .onMalformedInput(CodingErrorAction.REPORT)
                 .onUnmappableCharacter(CodingErrorAction.REPORT)

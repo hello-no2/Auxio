@@ -158,9 +158,15 @@ internal class SleepTimerController(
 
     private fun publish() = onStateChanged(state)
 
-    private companion object {
-        const val PREFERENCES_NAME = "sleep_timer_state"
-        const val KEY_DEADLINE_MILLIS = "deadline_wall_clock_ms"
-        const val KEY_STOP_AFTER_TRACK = "stop_after_current_track"
+    companion object {
+        internal fun hasPersistedTimer(context: Context): Boolean {
+            val preferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
+            return preferences.getLong(KEY_DEADLINE_MILLIS, 0L) > 0L ||
+                preferences.getBoolean(KEY_STOP_AFTER_TRACK, false)
+        }
+
+        private const val PREFERENCES_NAME = "sleep_timer_state"
+        private const val KEY_DEADLINE_MILLIS = "deadline_wall_clock_ms"
+        private const val KEY_STOP_AFTER_TRACK = "stop_after_current_track"
     }
 }
