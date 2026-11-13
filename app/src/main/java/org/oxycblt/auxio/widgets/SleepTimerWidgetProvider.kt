@@ -109,7 +109,8 @@ internal object SleepTimerWidgetRenderer {
         val manager = AppWidgetManager.getInstance(context)
         widgetSpecs.forEach { spec ->
             val component = ComponentName(context, spec.provider)
-            if (manager.getAppWidgetIds(component).isEmpty()) return@forEach
+            val widgetIds = manager.getAppWidgetIds(component)
+            if (widgetIds.isEmpty()) return@forEach
 
             val views = RemoteViews(context.packageName, spec.layout)
             views.setChronometer(
@@ -126,7 +127,7 @@ internal object SleepTimerWidgetRenderer {
                 R.id.widget_timer_toggle,
                 context.getString(R.string.desc_sleep_timer_start, minutes),
             )
-            manager.partiallyUpdateAppWidget(component, views)
+            manager.partiallyUpdateAppWidget(widgetIds, views)
         }
     }
 

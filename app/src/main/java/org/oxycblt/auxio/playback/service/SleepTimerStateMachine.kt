@@ -40,8 +40,13 @@ internal class SleepTimerStateMachine(initialState: SleepTimerState = SleepTimer
         return true
     }
 
-    /** A natural boundary consumes the pending stop; manual skips do not call this method. */
-    fun finishCurrentTrack(): Boolean {
+    /** A natural boundary consumes a pending stop, or expires a countdown that is already due. */
+    fun finishCurrentTrack(nowMillis: Long? = null): Boolean {
+        val countdown = state as? SleepTimerState.CountingDown
+        if (countdown != null && nowMillis != null && nowMillis >= countdown.deadlineMillis) {
+            state = SleepTimerState.Idle
+            return true
+        }
         if (state !is SleepTimerState.StopAfterCurrentTrack) return false
         state = SleepTimerState.Idle
         return true

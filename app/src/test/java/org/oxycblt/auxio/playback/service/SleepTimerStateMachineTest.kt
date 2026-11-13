@@ -43,6 +43,24 @@ class SleepTimerStateMachineTest {
     }
 
     @Test
+    fun naturalBoundaryAfterDeadlineExpiresTimerWithoutCoroutine() {
+        val machine = SleepTimerStateMachine()
+        machine.start(nowMillis = 0L, durationMinutes = 1)
+
+        assertTrue(machine.finishCurrentTrack(nowMillis = 60_001L))
+        assertEquals(SleepTimerState.Idle, machine.state)
+    }
+
+    @Test
+    fun naturalBoundaryBeforeDeadlineKeepsCountdown() {
+        val machine = SleepTimerStateMachine()
+        machine.start(nowMillis = 0L, durationMinutes = 1)
+
+        assertFalse(machine.finishCurrentTrack(nowMillis = 59_999L))
+        assertEquals(SleepTimerState.CountingDown(60_000L), machine.state)
+    }
+
+    @Test
     fun expiryWhileNotPlayingDoesNotLeavePendingStop() {
         val machine = SleepTimerStateMachine()
         machine.start(nowMillis = 0L, durationMinutes = 1)

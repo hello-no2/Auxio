@@ -71,7 +71,7 @@ internal class SleepTimerController(
 
     /** Ends playback at a natural track boundary if the countdown already expired. */
     fun onNaturalTrackEnded(): Boolean {
-        if (!stateMachine.finishCurrentTrack()) return false
+        if (!stateMachine.finishCurrentTrack(System.currentTimeMillis())) return false
         clearJobAndPersist()
         publish()
         playbackManager.endSession()
@@ -109,9 +109,13 @@ internal class SleepTimerController(
     private fun expire(deadline: Long) {
         val countdown = state as? SleepTimerState.CountingDown ?: return
         if (countdown.deadlineMillis != deadline) return
-        if (stateMachine.expire(System.currentTimeMillis(), playbackManager.progression.isPlaying)) {
+        val nowMillis = System.currentTimeMillis()
+        if (stateMachine.expire(nowMillis, playbackManager.progression.isPlaying)) {
             persist()
             publish()
+        } else if (state is SleepTimerState.CountingDown) {
+            // Wall-clock changes can wake delay before the persisted deadline; keep the timer armed.
+            schedule(deadline)
         }
     }
 
