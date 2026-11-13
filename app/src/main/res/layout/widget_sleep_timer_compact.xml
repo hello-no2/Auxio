@@ -25,8 +25,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="11sp"
-            tools:text="在没有尽头的海岸线尽头等一场不会迟到的雨" />
+            android:text="@string/def_playback"
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/widget_artist"
@@ -43,8 +43,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textSize="9sp"
-            tools:text="Stop after this song" />
+            android:text="@string/widget_sleep_timer_requires_playback"
+            android:textSize="9sp" />
     </LinearLayout>
 
     <Chronometer

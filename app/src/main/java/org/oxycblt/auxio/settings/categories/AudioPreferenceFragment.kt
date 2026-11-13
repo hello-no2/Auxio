@@ -31,6 +31,7 @@ import org.oxycblt.auxio.R
 import org.oxycblt.auxio.settings.BasePreferenceFragment
 import org.oxycblt.auxio.settings.ui.WrappedDialogPreference
 import org.oxycblt.auxio.util.navigateSafe
+import org.oxycblt.auxio.widgets.SleepTimerWidgetRenderer
 import timber.log.Timber as L
 
 /**
@@ -95,6 +96,7 @@ class AudioPreferenceFragment : BasePreferenceFragment(R.xml.preferences_audio) 
                 val minutes = picker.value
                 sharedPreferences.edit { putInt(preference.key, minutes) }
                 preference.summary = getString(R.string.set_sleep_timer_minutes_summary, minutes)
+                SleepTimerWidgetRenderer.updateDefaultDuration(context, minutes)
             }
             .show()
     }

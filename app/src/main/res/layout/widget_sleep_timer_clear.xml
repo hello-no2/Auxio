@@ -41,8 +41,8 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="12sp"
-        tools:text="在没有尽头的海岸线尽头等一场不会迟到的雨" />
+        android:text="@string/def_playback"
+        android:textSize="12sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
