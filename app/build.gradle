@@ -8,6 +8,17 @@ plugins {
     id "com.google.devtools.ksp"
 }
 
+def releaseKeystorePath = System.getenv("AUXIO_RELEASE_KEYSTORE_PATH")
+def releaseStorePassword = System.getenv("AUXIO_RELEASE_STORE_PASSWORD")
+def releaseKeyAlias = System.getenv("AUXIO_RELEASE_KEY_ALIAS")
+def releaseKeyPassword = System.getenv("AUXIO_RELEASE_KEY_PASSWORD")
+def releaseSigningConfigured = [
+    releaseKeystorePath,
+    releaseStorePassword,
+    releaseKeyAlias,
+    releaseKeyPassword
+].every { it }
+
 android {
     // Auxio implicitly depends on the native modules, explicitly specify it
     // here so the libraries are still stripped.
@@ -40,6 +51,17 @@ android {
         }
     }
 
+    signingConfigs {
+        if (releaseSigningConfigured) {
+            release {
+                storeFile file(releaseKeystorePath)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -47,6 +69,9 @@ android {
         }
 
         release {
+            if (releaseSigningConfigured) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
